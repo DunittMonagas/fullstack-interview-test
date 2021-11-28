@@ -53,7 +53,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-REPO_URLS = ''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
