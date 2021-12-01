@@ -1,8 +1,12 @@
 
 
+from git import GitCommandError
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
+
+
+from utils.git_controller import GitController
 
 
 class CommitViewSet(viewsets.ViewSet):
@@ -10,21 +14,26 @@ class CommitViewSet(viewsets.ViewSet):
 
     """
     def retrieve(self, request, pk=None):
-        dummy_data = [
-            {'name': 'Commit A', 'description': 'Description A'}, 
-            {'name': 'Commit B', 'description': 'Description B'}, 
-            {'name': 'Commit C', 'description': 'Description C'}, 
-            {'name': 'Commit D', 'description': 'Description D'}, 
-            {'name': 'Commit E', 'description': 'Description E'}, 
-        ]
 
-        for commit in dummy_data:
-            if pk == commit['name']:
-                return Response(commit)
+        git_controller = GitController()
         
-        return Response(
-            {'error': f'Commit {pk} not found.'},
-            status=status.HTTP_404_NOT_FOUND, 
-        )
+        try:
+            commit = git_controller.get_commit(pk)
+
+        except GitCommandError:
+            return Response(
+                {'error': f'Commit {pk} not found.'},
+                status=status.HTTP_404_NOT_FOUND, 
+            )
+
+        return Response({
+            'hexsha': commit.hexsha, 
+            'message': commit.message, 
+            'name': commit.author.name,
+            'email': commit.author.email,
+            'timestamps': commit.committed_date, 
+            'files_changed': commit.stats.total['files'], 
+        })
+        
 
 
