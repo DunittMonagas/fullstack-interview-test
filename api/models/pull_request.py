@@ -14,18 +14,18 @@ class PullRequest(models.Model):
 
     # original branch
     base_branch = models.CharField(
-        max_length=256, 
+        max_length=32, 
         null=False, 
         blank=False,
-        verbose_name="your branch (the compare branch)",
+        verbose_name="the repository's base branch",
     )
 
     # modified branch
     compare_branch = models.CharField(
-        max_length=256, 
+        max_length=32, 
         null=False, 
         blank=False,
-        verbose_name="the repository's base branch",
+        verbose_name="your branch (the compare branch)",
     )
 
     author = models.CharField(
@@ -41,7 +41,7 @@ class PullRequest(models.Model):
     )
 
     description = models.TextField(
-        max_length=2, 
+        max_length=256, 
         null=False, 
         blank=True,
         default='',

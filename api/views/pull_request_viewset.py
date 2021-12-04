@@ -20,4 +20,3 @@ class PullRequestViewSet(
     serializer_class = PullRequestSerializer
     queryset = PullRequest.objects.all()
 
-
