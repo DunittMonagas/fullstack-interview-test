@@ -61,7 +61,9 @@ class GitController():
             if branch_name == current_branch.name:
                 branch = current_branch
                 break
-
+        # Modify this, it is not necessary to use if to detect the existence 
+        # of the branch. Better to use KeyError on heads[branch] and 
+        # raise BranchNotFound
         if branch is None:
             # There is not branch branch_name
             raise BranchNotFountError(branch_name)
@@ -86,4 +88,40 @@ class GitController():
         except GitCommandError:
             logging.error(f'Commit "{hexsha}" not found')
             raise
+
+    def merge(
+        self, 
+        compare_branch_name: str, 
+        base_branch_name: str, 
+        message: str = None,
+    ) -> bool:
+        """
+        """
+        
+        try:
+            default_message = (
+                f"Merge branch '{compare_branch_name}' "
+                f"into {base_branch_name}"
+            )
+            message = message or default_message
+
+            base_branch = self._repo.branches[base_branch_name]
+            compare_branch = self._repo.branches[compare_branch_name]
+
+            merge_base = self._repo.merge_base(compare_branch, base_branch)
+
+            self._repo.index.merge_tree(base_branch, base=merge_base)
+            self._repo.index.commit(
+                message, 
+                parent_commits=(compare_branch.commit, base_branch.commit)
+            )
+
+            base_branch.commit = compare_branch.commit
+            self._repo.head.reference = base_branch
+
+            return True
+
+        except GitCommandError:
+            return False
+        
         
