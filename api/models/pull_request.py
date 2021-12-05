@@ -53,3 +53,15 @@ class PullRequest(models.Model):
         default=Status.OPEN,
     )
 
+    conflict = models.BooleanField(
+        default=False, 
+        verbose_name='There are conflicts to be resolved.'
+    )
+
+    conflict_description = models.TextField(
+        max_length=256, 
+        null=False, 
+        blank=True,
+        default='',
+    )
+
