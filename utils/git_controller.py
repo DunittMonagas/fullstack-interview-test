@@ -119,9 +119,9 @@ class GitController():
             base_branch.commit = compare_branch.commit
             self._repo.head.reference = base_branch
 
-            return True
+            return True, None
 
         except GitCommandError:
-            return False
+            return False, ""
         
         

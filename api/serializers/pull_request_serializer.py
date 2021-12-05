@@ -13,6 +13,31 @@ class PullRequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = PullRequest
 
+    def create(self, validated_data, *args, **kwargs):
+        """
+        """
+        # print(args)
+        # print(kwargs)
+        # print(self.__dict__)
+        # print(validated_data)
+        git_controller = GitController()
+
+        if validated_data['status'] == PullRequest.Status.MERGED:
+            
+            merge_result, conflict_description = git_controller.merge(
+                validated_data['compare_branch'], 
+                validated_data['base_branch'], 
+            )
+
+            validated_data['conflict'] = merge_result
+            validated_data['conflict_description'] = conflict_description or ""
+
+            if not merge_result:
+                validated_data['status'] = PullRequest.Status.OPEN
+            
+        instance = PullRequest.objects.create(**validated_data)
+
+
     def validate_status(self, value, *args, **kwargs):
         """
         Validates the status and all its transitions:
