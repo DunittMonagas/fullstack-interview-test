@@ -1,11 +1,11 @@
 
 
-import React, { useState } from 'react';
-import Navbar from "./components/Navbar";
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
 import Branch from './pages';
+import Navbar from "./components/Navbar";
 import PullRequest from './pages/PullRequest';
 
 
@@ -20,7 +20,7 @@ function App() {
             </Routes>
         </Router>
     );
-    
+
 }
 
 export default App;

@@ -1,14 +1,18 @@
 
 
-import React from 'react';
+import React from "react";
 
-const Branch = ({}) => {
-    return (    
+
+import Branch from "../components/Branch";
+
+
+const ListBranches = () => {
+    return (
         <>
             <h1>List Branches</h1>
-            
+            <Branch />
         </>
     );
 };
 
-export default Branch;
+export default ListBranches;
