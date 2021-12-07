@@ -9,7 +9,7 @@ export class ListCommits extends Component {
 
     constructor(branch, props){
         super(props)
-        console.log("constructor", branch.name)
+        console.log("constructor ListCommits", branch.name, props)
         this.state = {
             // branches
             commits: [],
@@ -18,7 +18,7 @@ export class ListCommits extends Component {
     }
 
     async getCommits(){
-
+        
         axios.defaults.baseURL = 'http://localhost:8000';
         axios.defaults.headers.common['Accept'] = 'application/json';
         axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -26,11 +26,14 @@ export class ListCommits extends Component {
         console.log(this.state.branchName)
         console.log('/api/v1.0/branches/' + this.state.branchName)
 
-        const response = await axios.get(
+        await axios.get(
             '/api/v1.0/branches/' + this.state.branchName
-        )
-        console.log(response.data)
-        this.setState({commits: response.data['commits']})
+        ).then(response => {
+            console.log("res", response.data);
+            const commitData = response.data;
+            this.setState({commits: response.data['commits']});
+
+        })
     
     }
 
@@ -48,21 +51,24 @@ export class ListCommits extends Component {
         return (    
             <>
                 <h1>Commits</h1>
-                    {this.state.commits.map((commit) => {
-                        
-                        const {summary, name, hexsha, timestamps} = commit
-                        const date = new Date(timestamps * 1000).toLocaleString()
+                {this.state.commits.map((commit, index) => {
+                    
+                    const {summary, name, hexsha, timestamps} = commit
+                    const date = new Date(timestamps * 1000).toLocaleString()
 
-                        return (
-                            // <Link to={""}
-                            <ul className="list-group list-group-horizontal">
-                                <li className="list-group-item">{summary}</li>
-                                <li className="list-group-item">{name}</li>
-                                <li className="list-group-item">{hexsha.substr(0, 7)}</li>
-                                <li className="list-group-item">{date}</li>
-                            </ul>
-                        );
-                    })}
+                    return (
+                        <ul key={index} className="list-group list-group-horizontal">
+                            <li className="list-group-item">{summary}</li>
+                            <li className="list-group-item">{name}</li>
+                            <li className="list-group-item">
+                                <Link to={`/commit/${hexsha}`} hexsha={hexsha}>
+                                    {hexsha.substr(0, 7)}
+                                </Link>                  
+                            </li>              
+                            <li className="list-group-item">{date}</li>
+                        </ul>
+                    );
+                })}
             </>
         );
     };

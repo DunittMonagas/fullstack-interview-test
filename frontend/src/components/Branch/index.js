@@ -45,9 +45,14 @@ export default class Branch extends Component {
             id: e.value, 
             label: e.label, 
             selected: e.selected,
-            commits: <ListCommits name={e.label} />, 
+            // commits: <ListCommits name={e.label} />, 
         })
     }
+
+    // componentDidUpdate() {
+    //     document.getElementById("mydiv").innerHTML =
+    //     "The updated favorite is " + this.state.label;
+    // }
 
     componentDidMount(){
         this.getOptions()
@@ -66,7 +71,11 @@ export default class Branch extends Component {
                 </div>
 
                 <div className="container">
-                    {this.state.commits}
+                    {/* {this.state.commits} */}
+                    {this.state.label &&
+                        <ListCommits name={this.state.label} />
+                    }
+                    {/* <ListCommits name="develop" /> */}
                 </div>
             </>
         );
