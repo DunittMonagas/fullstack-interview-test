@@ -2,19 +2,19 @@
 
 import React from "react";
 
-const PullRequest = () => {
+
+import PullRequest from "../components/PullRequest";
+
+
+const ListPullRequest = () => {
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh'
-            }}
-        >
+        <>
             <h1>Pull Request</h1>
-        </div>
+            <h6>Add new</h6>
+            <PullRequest />
+        </>
+
     );
 };
 
-export default PullRequest;
+export default ListPullRequest;
