@@ -8,6 +8,7 @@ import Branch from './pages';
 import Navbar from "./components/Navbar";
 import PullRequest from './pages/PullRequest';
 import CommitDetail from './pages/CommitDetail';
+import PullRequestForm from './pages/PullRequestForm';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/" exact element={<Branch />} />
                 <Route path="/commit/:hexsha" exact element={<CommitDetail />} />
                 <Route path="/pullrequest" element={<PullRequest />} />
+                <Route path="/pullrequestform" element={<PullRequestForm />} />
             </Routes>
         </Router>
     );
