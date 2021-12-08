@@ -51,9 +51,7 @@ export default class Branch extends Component {
         await axios.get(
             '/api/v1.0/branches/' + branchName
         ).then(response => {
-            const commitData = response.data;
             this.setState({commits: response.data['commits']});
-
         })
     
     }
@@ -84,10 +82,22 @@ export default class Branch extends Component {
                     />
                 </div>
 
-                <div className="container">
-                    {this.state.label &&
-                        <ListCommits commits={this.state.commits} />
-                    }
+                <div className="table-responsive-sm">
+                    <table className="table table-hover table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th style={{color: 'black'}}>Commit</th>
+                                <th style={{color: 'black'}}>Name</th>
+                                <th style={{color: 'black'}}>Summary</th>
+                                <th style={{color: 'black'}}>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.label &&
+                                <ListCommits commits={this.state.commits} />
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </>
         );

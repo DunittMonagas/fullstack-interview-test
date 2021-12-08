@@ -20,12 +20,11 @@ const Navbar = () => {
                 FlatMx
             </NavLogo>
             <Bars />
-
             <NavMenu>
-                <NavLink to="/" activeStyle>
+                <NavLink to="/">
                     Branch
                 </NavLink>
-                <NavLink to="/pullrequest" activeStyle>
+                <NavLink to="/pullrequest">
                     Pull Request
                 </NavLink>
             </NavMenu> 

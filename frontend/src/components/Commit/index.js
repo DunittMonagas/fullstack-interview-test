@@ -60,6 +60,7 @@ export default class Commit extends Component {
 
         return (    
             <>
+                <h1>Commit Detail</h1>
                 <div className="list-group">
                     <div className="list-group-item">
                         <div className="text-left">

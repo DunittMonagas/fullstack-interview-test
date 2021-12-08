@@ -49,7 +49,7 @@ export default class PullRequest extends Component {
         axios.defaults.headers.common['Content-Type'] = 'application/json';
 
         const objIndex = this.state.pullRequestData.findIndex((
-            element => element.id == id
+            element => element.id === id
         ));
 
         axios.patch(`/api/v1.0/pull-request/${id}/`, {status: newStatus})
@@ -106,7 +106,7 @@ export default class PullRequest extends Component {
                                 <button 
                                     type="button" 
                                     className="btn btn-success btn-sm" 
-                                    disabled={pullRequestStatus != 'OP'}
+                                    disabled={pullRequestStatus !== 'OP'}
                                     onClick={() => this.handleChangeStatus(id, 'MD')}
                                 >
                                     Merge
@@ -116,7 +116,7 @@ export default class PullRequest extends Component {
                                 <button 
                                     type="button" 
                                     className="btn btn-danger btn-sm" 
-                                    disabled={pullRequestStatus != 'OP'}
+                                    disabled={pullRequestStatus !== 'OP'}
                                     onClick={() => this.handleChangeStatus(id, 'CL')}
                                 >
                                     Close
