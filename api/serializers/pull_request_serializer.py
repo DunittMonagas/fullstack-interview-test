@@ -37,6 +37,8 @@ class PullRequestSerializer(serializers.ModelSerializer):
             
         instance = PullRequest.objects.create(**validated_data)
 
+        return instance
+
 
     def validate_status(self, value, *args, **kwargs):
         """
