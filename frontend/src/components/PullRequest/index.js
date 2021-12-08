@@ -10,16 +10,8 @@ export default class PullRequest extends Component {
         super(props)
         this.state = {
             pullRequestData: [], 
-            // base_branch: "",
-            // compare_branch: "",
-            // author: "",
-            // title: "",
-            // description: "",
-            // pullRequestStatus: "",
-            // conflict: false,
-            // conflict_description: "",
         }
-        // this.onChange = this.onChange.bind(this);
+        this.handleChangeStatus = this.handleChangeStatus.bind(this);
     }
 
     async getOptions(){
@@ -29,7 +21,7 @@ export default class PullRequest extends Component {
         axios.defaults.headers.common['Content-Type'] = 'application/json';
 
         const response = await axios.get('/api/v1.0/pull-request/')
-        // console.log(response.data);
+        
         const pullRequestData = response.data.map((pullRequest, index) => ({
             "id": pullRequest["id"],
             "baseBranch": pullRequest["base_branch"],
@@ -41,37 +33,16 @@ export default class PullRequest extends Component {
             "conflict": pullRequest["conflict"],
             "conflictDescription": pullRequest["conflict_description"],
         }))
-    
-        // const options = pullRequestData.map((pullRequest, index) => ({
-            // "value": index,
-            // "label" : name
-        // }))
 
         this.setState({pullRequestData: pullRequestData})
     
     }
 
-    onChange(e){
-        console.log("CHANGE", e);
-        // this.setState({
-        //     pullRequestData: e.pullRequestData
-        //     // id: e.value, 
-        //     // label: e.label, 
-        //     // selected: e.selected,
-        //     // commits: <ListCommits name={e.label} />, 
-        // })
-    }
-
-    // componentDidUpdate() {
-    //     document.getElementById("mydiv").innerHTML =
-    //     "The updated favorite is " + this.state.label;
-    // }
-
     componentDidMount(){
         this.getOptions()
     }
 
-    handleChangeStatus = (id, newStatus) => {
+    handleChangeStatus(id, newStatus) {
 
         axios.defaults.baseURL = 'http://localhost:8000';
         axios.defaults.headers.common['Accept'] = 'application/json';
@@ -93,7 +64,7 @@ export default class PullRequest extends Component {
 
                 items[objIndex] = item;
 
-                this.setState({items});
+                this.setState({pullRequestData: items});
                 alert("Success!");
             })
             .catch(error => {
@@ -135,27 +106,39 @@ export default class PullRequest extends Component {
                                 <button 
                                     type="button" 
                                     className="btn btn-success btn-sm" 
+                                    disabled={pullRequestStatus != 'OP'}
                                     onClick={() => this.handleChangeStatus(id, 'MD')}
                                 >
                                     Merge
                                 </button>
-                                // <button type="button" className="btn btn-danger">Close</button>
                             }
                             {pullRequestStatus === 'OP' &&
-                                // <button type="button" className="btn btn-success">Merge</button>
                                 <button 
                                     type="button" 
                                     className="btn btn-danger btn-sm" 
+                                    disabled={pullRequestStatus != 'OP'}
                                     onClick={() => this.handleChangeStatus(id, 'CL')}
                                 >
                                     Close
                                 </button>
                             }
                             {pullRequestStatus === 'MD' &&
-                                <button type="button" className="btn btn-success btn-sm" disabled>Merged</button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-success btn-sm" 
+                                    disabled
+                                >
+                                    Merged
+                                </button>
                             }
                             {pullRequestStatus === 'CL' &&
-                                <button type="button" className="btn btn-danger btn-sm" disabled>Closed</button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-danger btn-sm" 
+                                    disabled
+                                >
+                                    Closed
+                                </button>
                             }
                         </ul>
                     );

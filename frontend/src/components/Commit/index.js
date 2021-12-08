@@ -8,7 +8,6 @@ export default class Commit extends Component {
 
     constructor(commit, props){
         super(props)
-        // console.log('constructor Commit', commit, props)
         this.state = {
             name: "", 
             email: "", 
@@ -25,14 +24,10 @@ export default class Commit extends Component {
         axios.defaults.headers.common['Accept'] = 'application/json';
         axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-        // console.log(this.state.sha)
-        // console.log('/api/v1.0/commits/' + this.state.sha)
-
         const response = await axios.get(
             '/api/v1.0/commits/' + this.state.sha
         )
         const dataCommit = response.data;
-        // console.log(dataCommit);
 
         this.setState({
             commits: dataCommit['commits'],
