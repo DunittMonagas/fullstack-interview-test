@@ -19,6 +19,7 @@ export default class PullRequest extends Component {
             // conflict: false,
             // conflict_description: "",
         }
+        // this.onChange = this.onChange.bind(this);
     }
 
     async getOptions(){
@@ -50,14 +51,15 @@ export default class PullRequest extends Component {
     
     }
 
-    handleChange(e){
-        this.setState({
-            pullRequestData: e.pullRequestData
-            // id: e.value, 
-            // label: e.label, 
-            // selected: e.selected,
-            // commits: <ListCommits name={e.label} />, 
-        })
+    onChange(e){
+        console.log("CHANGE", e);
+        // this.setState({
+        //     pullRequestData: e.pullRequestData
+        //     // id: e.value, 
+        //     // label: e.label, 
+        //     // selected: e.selected,
+        //     // commits: <ListCommits name={e.label} />, 
+        // })
     }
 
     // componentDidUpdate() {
@@ -69,7 +71,7 @@ export default class PullRequest extends Component {
         this.getOptions()
     }
 
-    handleClose = (id) => {
+    handleChangeStatus = (id, newStatus) => {
 
         axios.defaults.baseURL = 'http://localhost:8000';
         axios.defaults.headers.common['Accept'] = 'application/json';
@@ -79,40 +81,24 @@ export default class PullRequest extends Component {
             element => element.id == id
         ));
 
-        const oldPullRequest = this.state.pullRequestData[objIndex];
-
-        const pullRequest = {
-            "id": oldPullRequest["id"],
-            "base_branch": oldPullRequest["baseBranch"],
-            "compare_branch": oldPullRequest["compareBranch"],
-            "author": oldPullRequest["author"],
-            "title": oldPullRequest["title"],
-            "description": oldPullRequest["description"],
-            "conflict": oldPullRequest["conflict"],
-            "conflict_description": oldPullRequest["conflictDescription"],
-            status: 'CL',
-        };
-
-        axios.put(`/api/v1.0/pull-request/${id}/`, pullRequest)
+        axios.patch(`/api/v1.0/pull-request/${id}/`, {status: newStatus})
             .then(response => {
 
                 let items = [...this.state.pullRequestData];
 
                 let item = {
                     ...items[objIndex],
-                    pullRequestStatus: 'CL'
+                    pullRequestStatus: newStatus
                 }
 
                 items[objIndex] = item;
 
                 this.setState({items});
+                alert("Success!");
             })
             .catch(error => {
                 alert("Error!");
             });
-    };
-
-    handleMerge = (id) => {
 
     };
 
@@ -120,7 +106,7 @@ export default class PullRequest extends Component {
 
         return (    
             <>
-                {this.state.pullRequestData.map((pullRequest) => {
+                {this.state.pullRequestData.map((pullRequest, index) => {
                     
                     const {
                         id,
@@ -146,12 +132,24 @@ export default class PullRequest extends Component {
                                 <li className="list-group-item">{conflictDescription}</li>
                             }
                             {pullRequestStatus === 'OP' &&
-                                <button type="button" className="btn btn-success btn-sm" onClick={() => this.handleMerge(id)}>Merge</button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-success btn-sm" 
+                                    onClick={() => this.handleChangeStatus(id, 'MD')}
+                                >
+                                    Merge
+                                </button>
                                 // <button type="button" className="btn btn-danger">Close</button>
                             }
                             {pullRequestStatus === 'OP' &&
                                 // <button type="button" className="btn btn-success">Merge</button>
-                                <button type="button" className="btn btn-danger btn-sm" onClick={() => this.handleClose(id)}>Close</button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-danger btn-sm" 
+                                    onClick={() => this.handleChangeStatus(id, 'CL')}
+                                >
+                                    Close
+                                </button>
                             }
                             {pullRequestStatus === 'MD' &&
                                 <button type="button" className="btn btn-success btn-sm" disabled>Merged</button>
