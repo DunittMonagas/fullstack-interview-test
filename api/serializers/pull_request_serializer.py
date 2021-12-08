@@ -13,6 +13,33 @@ class PullRequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = PullRequest
 
+    def create(self, validated_data, *args, **kwargs):
+        """
+        """
+        # print(args)
+        # print(kwargs)
+        # print(self.__dict__)
+        # print(validated_data)
+        git_controller = GitController()
+
+        if validated_data['status'] == PullRequest.Status.MERGED:
+            
+            merge_result, conflict_description = git_controller.merge(
+                validated_data['compare_branch'], 
+                validated_data['base_branch'], 
+            )
+
+            validated_data['conflict'] = merge_result
+            validated_data['conflict_description'] = conflict_description or ""
+
+            if not merge_result:
+                validated_data['status'] = PullRequest.Status.OPEN
+            
+        instance = PullRequest.objects.create(**validated_data)
+
+        return instance
+
+
     def validate_status(self, value, *args, **kwargs):
         """
         Validates the status and all its transitions:
@@ -50,21 +77,32 @@ class PullRequestSerializer(serializers.ModelSerializer):
             * You cannot merge a branch on itself.
         """
         
+        method = self.context['request'].method
+
         git_controller = GitController()
         all_branches = [
             branch.name for branch in git_controller.get_branches()
         ]
 
-        if data['base_branch'] not in all_branches:
-            raise ValidationError(f"{data['base_branch']} does not exist.")
+        if method in ['PUT', 'POST']:
+            if data.get('base_branch') not in all_branches:
+                raise ValidationError(
+                    f"{data['base_branch']} does not exist."
+                )
 
-        if data['compare_branch'] not in all_branches:
-            raise ValidationError(f"{data['compare_branch']} does not exist.")
+            if data.get('compare_branch') not in all_branches:
+                raise ValidationError(
+                    f"{data['compare_branch']} does not exist."
+                )
 
-        if data['base_branch'] == data['compare_branch']:
-            raise ValidationError(
-                'Base branch and compare branch cannot be the same.'
-            )
+            if data['base_branch'] == data['compare_branch']:
+                raise ValidationError(
+                    'Base branch and compare branch cannot be the same.'
+                )
+
+        elif method == 'PATCH':
+            if not data.get('status'):
+                raise ValidationError('Status not found.')
 
         return data
 
