@@ -29,13 +29,37 @@ class PullRequestSerializer(serializers.ModelSerializer):
                 validated_data['base_branch'], 
             )
 
-            validated_data['conflict'] = merge_result
+            validated_data['conflict'] = not merge_result
             validated_data['conflict_description'] = conflict_description or ""
 
             if not merge_result:
                 validated_data['status'] = PullRequest.Status.OPEN
             
         instance = PullRequest.objects.create(**validated_data)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        """
+        """
+
+        git_controller = GitController()
+        instance.status = validated_data.get('status', instance.status)
+
+        if instance.status == PullRequest.Status.MERGED:
+            
+            merge_result, conflict_description = git_controller.merge(
+                instance.compare_branch, 
+                instance.base_branch, 
+            )
+
+            instance.conflict = not merge_result
+            instance.conflict_description = conflict_description or ""           
+
+            if not merge_result:
+                instance.status = PullRequest.Status.OPEN 
+
+        instance.save()
 
         return instance
 
