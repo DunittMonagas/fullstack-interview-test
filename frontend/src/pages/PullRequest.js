@@ -14,9 +14,27 @@ const ListPullRequest = () => {
             <Link to="/pullrequestform">
                 <button className='btn btn-primary' type="button">Add</button>
             </Link>
-            <PullRequest />
-        </>
 
+            <div className="table-responsive-sm">
+                    <table className="table table-hover table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th style={{color: 'black'}}>Base Branch</th>
+                                <th style={{color: 'black'}}>Compare Branch</th>
+                                <th style={{color: 'black'}}>Author</th>
+                                <th style={{color: 'black'}}>Title</th>
+                                <th style={{color: 'black'}}>Description</th>
+                                <th style={{color: 'black'}}>Status</th>
+                                <th style={{color: 'black'}}>Conflicts</th>
+                                <th style={{color: 'black'}}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <PullRequest />
+                        </tbody>
+                    </table>
+                </div>
+        </>
     );
 };
 

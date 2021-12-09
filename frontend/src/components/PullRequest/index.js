@@ -30,7 +30,6 @@ export default class PullRequest extends Component {
             "title": pullRequest["title"],
             "description": pullRequest["description"],
             "pullRequestStatus": pullRequest["status"],
-            "conflict": pullRequest["conflict"],
             "conflictDescription": pullRequest["conflict_description"],
         }))
 
@@ -87,60 +86,47 @@ export default class PullRequest extends Component {
                         title,
                         description,
                         pullRequestStatus,
-                        conflict,
                         conflictDescription,
                     } = pullRequest;
 
+                    const statusMapper = {
+                        OP: 'Open',
+                        MD: 'Merged',
+                        CL: 'Closed',
+                    }
+
                     return (
-                        <ul key={id} className="list-group list-group-horizontal">
-                            <li className="list-group-item">{baseBranch}</li>
-                            <li className="list-group-item">{compareBranch}</li>
-                            <li className="list-group-item">{author}</li>
-                            <li className="list-group-item">{title}</li>
-                            <li className="list-group-item">{description}</li>
-                            <li className="list-group-item">{pullRequestStatus}</li>
-                            {conflict &&
-                                <li className="list-group-item">{conflictDescription}</li>
-                            }
-                            {pullRequestStatus === 'OP' &&
-                                <button 
-                                    type="button" 
-                                    className="btn btn-success btn-sm" 
-                                    disabled={pullRequestStatus !== 'OP'}
-                                    onClick={() => this.handleChangeStatus(id, 'MD')}
-                                >
-                                    Merge
-                                </button>
-                            }
-                            {pullRequestStatus === 'OP' &&
-                                <button 
-                                    type="button" 
-                                    className="btn btn-danger btn-sm" 
-                                    disabled={pullRequestStatus !== 'OP'}
-                                    onClick={() => this.handleChangeStatus(id, 'CL')}
-                                >
-                                    Close
-                                </button>
-                            }
-                            {pullRequestStatus === 'MD' &&
-                                <button 
-                                    type="button" 
-                                    className="btn btn-success btn-sm" 
-                                    disabled
-                                >
-                                    Merged
-                                </button>
-                            }
-                            {pullRequestStatus === 'CL' &&
-                                <button 
-                                    type="button" 
-                                    className="btn btn-danger btn-sm" 
-                                    disabled
-                                >
-                                    Closed
-                                </button>
-                            }
-                        </ul>
+                        <tr key={id}>
+                            <td>{baseBranch}</td>
+                            <td>{compareBranch}</td>
+                            <td>{author}</td>
+                            <td>{title}</td>
+                            <td>{description}</td>
+                            <td>{statusMapper[pullRequestStatus]}</td>
+                            <td>{conflictDescription}</td>
+                            <td>
+                                {pullRequestStatus === 'OP' &&
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-success btn-sm" 
+                                        disabled={pullRequestStatus !== 'OP'}
+                                        onClick={() => this.handleChangeStatus(id, 'MD')}
+                                    >
+                                        Merge
+                                    </button>
+                                } 
+                                {pullRequestStatus === 'OP' &&
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-danger btn-sm" 
+                                        disabled={pullRequestStatus !== 'OP'}
+                                        onClick={() => this.handleChangeStatus(id, 'CL')}
+                                    >
+                                        Close
+                                    </button>
+                                }
+                            </td>
+                        </tr>
                     );
                 })}
             </>

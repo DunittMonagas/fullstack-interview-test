@@ -93,9 +93,9 @@ export default class Branch extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.label &&
+                            {/* {this.state.label && */}
                                 <ListCommits commits={this.state.commits} />
-                            }
+                            {/* } */}
                         </tbody>
                     </table>
                 </div>

@@ -59,22 +59,13 @@ export default class Commit extends Component {
         const date = new Date(this.state.timestamps * 1000).toLocaleString()
 
         return (    
-            <>
+            <>  
                 <h1>Commit Detail</h1>
-                <div className="list-group">
-                    <div className="list-group-item">
-                        <div className="text-left">
-                            <h6 className="list-group-item-heading">Auhor: {this.state.name}</h6>
-                            <h6 className="list-group-item-heading">Email: {this.state.email}</h6>
-                        </div>
-                        <div className="text-left">
-                            <h6 className="list-group-item-heading">Description</h6>
-                            <p className="list-group-item-text">{this.state.message}</p>
-                        </div>
-                        <div className="text-left">
-                            <p>{this.state.filesChanged} files changed</p>
-                            <p>{date} </p>
-                        </div>
+                <div className="card border-dark">
+                    <div className="card-header">{this.state.message}</div>
+                    <div className="card-body text-dark">
+                        <footer class="blockquote-footer"><cite>{this.state.filesChanged} files changed</cite></footer>
+                        <footer class="blockquote-footer">{this.state.name} ({this.state.email}) committed on <cite>{date}</cite></footer>
                     </div>
                 </div>
             </>
