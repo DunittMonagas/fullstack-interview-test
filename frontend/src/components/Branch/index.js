@@ -9,8 +9,10 @@ import React, { Component } from 'react';
 import ListCommits  from './ListCommits';
 
 
-export default class Branch extends Component {
-
+export default class Branch extends Component {    
+    /* 
+    Displays each branch with its respective commits. 
+    */
     constructor(props){
         super(props)
         this.state = {
@@ -93,9 +95,7 @@ export default class Branch extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {this.state.label && */}
-                                <ListCommits commits={this.state.commits} />
-                            {/* } */}
+                            <ListCommits commits={this.state.commits} />
                         </tbody>
                     </table>
                 </div>

@@ -25,6 +25,7 @@ class BranchNotFountError(Exception):
 
 class GitController():
     """
+    GitPython controller. Abstraction layer for easy repository management.
     """
     def __init__(self, repo_dir: str = None):
 
@@ -33,12 +34,23 @@ class GitController():
 
     def get_branches(self) -> List[Head]:
         """
+        Returns a list of all branches present in the repository.
+
+        return:
+            List of git.Head (branches)
         """
-        # print(self._repo)
         return [branch for branch in self._repo.heads]
 
     def _get_commits(self, commit: Union[str, Commit]) -> List[Commit]:
         """
+        All commits of a branch.
+
+        args:
+            commit: reference to the last commit of the required branch.
+
+        return:
+            List of commits (git.Commit). It can return an empty list 
+            if no commit is found.
         """
         try:
             return list(self._repo.iter_commits(commit))
@@ -48,14 +60,17 @@ class GitController():
 
     def get_branch(self, branch_name: str) -> Dict:
         """
+        Detailed information of a branch.
+
+        args:
+            branch_name: branch name
+        
+        return:
+            A dictionary with:
+                * branch_name: branch name.
+                * head: reference to the most recent commit (git.commit).
+                * commits: list of commits belonging to that branch.
         """
-        # branch.commit.hexsha (head)
-        # branch.commit.author
-        # branch.commit.message or branch.commit.summary (summary: first line)
-        # branch.commit.stats.total['files']
-        # list commits
-        # for commit in repo.iter_commits(branch.commit):
-        #     print(commit)
         branch = None
         for current_branch in self._repo.heads:
             if branch_name == current_branch.name:
@@ -76,12 +91,14 @@ class GitController():
 
     def get_commit(self, hexsha: Union[str, Commit]) -> Commit:
         """
-        """
-        # commit.hexsha
-        # commit.author
-        # commit.message or commit.summary (summary: first line)
-        # branch.commit.stats.total['files']
+        Return a commit (git.Commit)
 
+        args:
+            hexsha: reference to the required commit. It can be SHA in str.
+
+        return:
+            The git.Commit object (representation of the commit in GitPython)
+        """
         try:
             return list(Commit.iter_items(self._repo, hexsha))[0]
 
@@ -94,8 +111,25 @@ class GitController():
         compare_branch_name: str, 
         base_branch_name: str, 
         message: str = None,
-    ) -> bool:
+    ) -> (bool, Union[str, None]):
         """
+        Set of instructions needed to execute a merge 
+        using GitPython without having to switch branches.
+
+        args:
+            compare_branch_name, base_brance_name: names of the compare 
+            branch and the base branch respectively.
+            message: merge commit message (optional).
+
+        return:
+            (bool, str): 
+                * The first parameter is a boolean indicating whether 
+                  the operation was successful. True if the merge was executed 
+                  without problems, false otherwise. 
+
+                * For the second element of the tuple, when the operation did not 
+                  finish successfully it returns a str with the error message. 
+                  If no problem is encountered, this parameter is null.
         """
         
         try:

@@ -7,8 +7,9 @@ import React, { useState, useEffect } from 'react';
 
 
 import "./PullRequestForm.css";
-
-
+/* 
+Component to create Pull Request creation form using Formik and Yup for validations.
+ */
 const MyTextInput = ({ label, ...props }) => {
 
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -122,9 +123,14 @@ const PullRequestForm = () => {
                     }}
                     validationSchema={Yup.object({
                         baseBranch: Yup.string()
+                        // baseBranch is mandatory and must be one of 
+                        // the options present in the branches array.
                             .oneOf(branches, 'Invalid base branch')
                             .required('Required'),
                         compareBranch: Yup.string()
+                            // compareBranch is mandatory and must be one 
+                            // of the options present in the branches array. 
+                            // However, it cannot have the same value as baseBranch.
                             .oneOf(
                                 branches, 
                                 'Compare branch must be one of the following values: ${values}'
@@ -145,6 +151,8 @@ const PullRequestForm = () => {
                         description: Yup.string()
                             .max(256, 'Must be 256 characters or less'),
                         pullRequestStatus: Yup.string()
+                            // pullRequestStatus (status) is mandatory and 
+                            // must be one of the options present in optionsStatus
                             .max(2, 'Must be 256 characters or less')
                             .oneOf(optionsStatus, 'Invalid status')
                             .required('Required'),

@@ -9,12 +9,15 @@ from utils.git_controller import GitController, BranchNotFountError
 
 
 class TestGitController(TestCase):
-
+    """
+    Unit tests for the GitPython driver.
+    """
     def setUp(self):
         self.git_controller = GitController()
     
     def test_environment_variable(self):
         """
+        Verify that the environment variable has been loaded correctly.
         """
         repo_dir = os.environ.get('REPO_DIR', '')
         setup_repo_dir = self.git_controller.repo_dir
@@ -23,6 +26,8 @@ class TestGitController(TestCase):
 
     def test_get_branches(self):
         """
+        Unit test to obtain all branches. 
+        Verify the presence of the "master" branch.
         """
         branches = self.git_controller.get_branches()
         self.assertIsInstance(branches, list)
@@ -31,6 +36,8 @@ class TestGitController(TestCase):
 
     def test_get_branch(self):
         """
+        Verify that it correctly returns the requested branch 
+        with its respective structure.
         """
         branch_name = 'master'
         branch = self.git_controller.get_branch(branch_name)
@@ -47,6 +54,7 @@ class TestGitController(TestCase):
     
     def test_nonexistent_branch(self):
         """
+        Validates the exception when no branch is found.
         """
         self.assertRaises(
             BranchNotFountError,
@@ -56,6 +64,7 @@ class TestGitController(TestCase):
         
     def test_get_commit(self):
         """
+        Unit test to obtain the most recent commit of the "master" branch.
         """
         branch_name = 'master'
         branch = self.git_controller.get_branch(branch_name)
@@ -66,6 +75,7 @@ class TestGitController(TestCase):
 
     def test_nonexistent_commit(self):
         """
+        Validates the exception when a commit is not found,
         """
         self.assertRaises(
             GitCommandError, 
@@ -75,6 +85,7 @@ class TestGitController(TestCase):
 
     def test__get_commits(self):
         """
+        Unit test to get all commits from the "master" branch.
         """
         branch_name = 'master'
         branch = self.git_controller.get_branch(branch_name)
@@ -87,8 +98,9 @@ class TestGitController(TestCase):
 
     def test_nonexistent_head(self):
         """
+        Validates the exception when no commit is found.
         """
         binsha = 'anything'
         commits = self.git_controller._get_commits(binsha)
         self.assertIsInstance(commits, list)
-        self.assertTrue(len(commits) == 0) #
+        self.assertTrue(len(commits) == 0)

@@ -15,11 +15,12 @@ class PullRequestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data, *args, **kwargs):
         """
+        Cases:
+            * When the status is OPEN, it simply returns the newly created instance.
+            * When the status is MERGED, it tries to apply the operation and returns 
+              an instance with the result obtained. In case of finding an unresolved 
+              conflict, it does not modify the state of the pull request.
         """
-        # print(args)
-        # print(kwargs)
-        # print(self.__dict__)
-        # print(validated_data)
         git_controller = GitController()
 
         if validated_data['status'] == PullRequest.Status.MERGED:
@@ -41,8 +42,12 @@ class PullRequestSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """
+        Cases:
+            * In case of updating the status to closed, simply assign the new status.
+            * For the merge case, it tries to apply the operation and returns an instance 
+              with the obtained result. In case of finding an unresolved conflict, 
+              it does not modify the state of the pull request.
         """
-
         git_controller = GitController()
         instance.status = validated_data.get('status', instance.status)
 
@@ -99,6 +104,7 @@ class PullRequestSerializer(serializers.ModelSerializer):
         Validation:
             * Verify the existence of the branches to be operated.
             * You cannot merge a branch on itself.
+            * Checks whether the status is found.
         """
         
         method = self.context['request'].method
