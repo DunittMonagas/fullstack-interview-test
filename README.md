@@ -1,6 +1,33 @@
 # fullstack-interview-test
 Interview test for fullstack Software Engineers
 
+## Instructions 
+
+1. Clone the repository
+2. In a terminate run from the root of the project to pull up the backend services:
+
+`$ docker-compose up -d --build`
+
+3. In a second terminal from the root of the project:
+
+```
+$ cd frontend
+$ npm install
+$ npm start
+```
+
+By default the backend runs on `localhost:8000` and the frontend on `localhost:3000`.
+
+#### ***IMPORTANT: The merge pull request function will actually apply the merge on the selected branches.***
+
+## Optional
+
+To run the unit tests:
+
+`$ docker-compose exec --user 1000:1000 web python manage.py test`
+
+***NOTE:*** Any messages printed during unit test execution are for debugging.
+
 ## Welcome!
 If you're reading this, it means we're interested in working with you and solving amazing and difficult problems in real-estate tech in Mexico.
 

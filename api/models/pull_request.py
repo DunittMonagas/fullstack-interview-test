@@ -1,0 +1,67 @@
+
+
+from django.db import models
+
+
+class PullRequest(models.Model):
+    """
+    Database representation of the Pull Request
+    """
+    class Status(models.TextChoices):
+        OPEN = 'OP', 'Open'
+        CLOSED = 'CL', 'Closed'
+        MERGED = 'MD', 'Merged'
+
+    # original branch
+    base_branch = models.CharField(
+        max_length=32, 
+        null=False, 
+        blank=False,
+        verbose_name="the repository's base branch",
+    )
+
+    # modified branch
+    compare_branch = models.CharField(
+        max_length=32, 
+        null=False, 
+        blank=False,
+        verbose_name="your branch (the compare branch)",
+    )
+
+    author = models.CharField(
+        max_length=32, 
+        null=False, 
+        blank=False,
+    )
+
+    title = models.CharField(
+        max_length=32, 
+        null=False, 
+        blank=False,
+    )
+
+    description = models.TextField(
+        max_length=256, 
+        null=False, 
+        blank=True,
+        default='',
+    )
+
+    status = models.CharField(
+        max_length=2,
+        choices=Status.choices,
+        default=Status.OPEN,
+    )
+
+    conflict = models.BooleanField(
+        default=False, 
+        verbose_name='There are conflicts to be resolved.'
+    )
+
+    conflict_description = models.TextField(
+        max_length=256, 
+        null=False, 
+        blank=True,
+        default='',
+    )
+
