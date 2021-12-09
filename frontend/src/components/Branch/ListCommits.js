@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-
+/* 
+Given an array of commits (object) returns one row for each element in the array.
+ */
 const ListCommits = ({
     commits
 }) => {
@@ -31,4 +32,4 @@ const ListCommits = ({
     );
 };
   
-  export default ListCommits;
+export default ListCommits;

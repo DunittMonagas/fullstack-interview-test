@@ -5,7 +5,9 @@ import React, { Component } from 'react';
 
 
 export default class Commit extends Component {
-
+    /* 
+    Detailed view of a commit.
+     */
     constructor(commit, props){
         super(props)
         this.state = {

@@ -5,7 +5,9 @@ import React, { Component } from 'react';
 
 
 export default class PullRequest extends Component {
-
+    /* 
+    Component to display all pull requests and update their status if possible.
+     */
     constructor(props){
         super(props)
         this.state = {

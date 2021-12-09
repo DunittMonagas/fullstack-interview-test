@@ -11,7 +11,9 @@ import {
     NavMenu,
 } from "./NavbarElements";
 
-
+/* 
+Navigation bar
+ */
 const Navbar = () => {
     return (
         <>

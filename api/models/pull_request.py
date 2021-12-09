@@ -5,7 +5,7 @@ from django.db import models
 
 class PullRequest(models.Model):
     """
-
+    Database representation of the Pull Request
     """
     class Status(models.TextChoices):
         OPEN = 'OP', 'Open'
