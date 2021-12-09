@@ -125,7 +125,10 @@ const PullRequestForm = () => {
                             .oneOf(branches, 'Invalid base branch')
                             .required('Required'),
                         compareBranch: Yup.string()
-                            .oneOf(branches)
+                            .oneOf(
+                                branches, 
+                                'Compare branch must be one of the following values: ${values}'
+                            )
                             .when("baseBranch", (baseBranch, schema) => {
                                 return schema
                                     .notOneOf([baseBranch])

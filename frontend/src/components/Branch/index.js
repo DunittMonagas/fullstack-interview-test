@@ -5,7 +5,8 @@ import axios from 'axios';
 import Select from 'react-select';
 import React, { Component } from 'react';
 
-import { ListCommits } from './ListCommits';
+
+import ListCommits  from './ListCommits';
 
 
 export default class Branch extends Component {
@@ -18,8 +19,9 @@ export default class Branch extends Component {
             id: "",
             label: "",
             selected: "", 
-            commits: null, 
+            commits: [], 
         }
+        this.handleChange = this.handleChange.bind(this)
     }
 
     async getOptions(){
@@ -40,19 +42,29 @@ export default class Branch extends Component {
     
     }
 
+    async getCommits(branchName){
+        
+        axios.defaults.baseURL = 'http://localhost:8000';
+        axios.defaults.headers.common['Accept'] = 'application/json';
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+        await axios.get(
+            '/api/v1.0/branches/' + branchName
+        ).then(response => {
+            this.setState({commits: response.data['commits']});
+        })
+    
+    }
+
     handleChange(e){
+        
+        this.getCommits(e.label);
         this.setState({
             id: e.value, 
             label: e.label, 
             selected: e.selected,
-            // commits: <ListCommits name={e.label} />, 
         })
     }
-
-    // componentDidUpdate() {
-    //     document.getElementById("mydiv").innerHTML =
-    //     "The updated favorite is " + this.state.label;
-    // }
 
     componentDidMount(){
         this.getOptions()
@@ -66,16 +78,26 @@ export default class Branch extends Component {
                     <Select 
                         value={this.state.selected}
                         options={this.state.options} 
-                        onChange={this.handleChange.bind(this)} 
+                        onChange={this.handleChange} 
                     />
                 </div>
 
-                <div className="container">
-                    {/* {this.state.commits} */}
-                    {this.state.label &&
-                        <ListCommits name={this.state.label} />
-                    }
-                    {/* <ListCommits name="develop" /> */}
+                <div className="table-responsive-sm">
+                    <table className="table table-hover table-sm">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th style={{color: 'black'}}>Commit</th>
+                                <th style={{color: 'black'}}>Name</th>
+                                <th style={{color: 'black'}}>Summary</th>
+                                <th style={{color: 'black'}}>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* {this.state.label && */}
+                                <ListCommits commits={this.state.commits} />
+                            {/* } */}
+                        </tbody>
+                    </table>
                 </div>
             </>
         );
